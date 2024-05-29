@@ -27,62 +27,69 @@
 </template>
 
 <script>
-export default {
-    data() {
-        return {
-            username: '',
-            email: '',
-            password: '',
-            errorMessage: '',
-            successMessage: ''
-        };
-    },
-    methods: {
-        registerUser() {
-            // Crear un objeto con los datos del usuario
-            const userData = {
-                username: this.username,
-                email: this.email,
-                password: this.password
-            };
+import Swal from 'sweetalert2';
 
-            // Realizar la solicitud POST al servidor
-            fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userData)
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Registro exitoso
-                    return response.text();
-                } else {
-                    // Devolver el texto de la respuesta del servidor
-                    return response.text().then(text => {
-                        throw new Error(text);
-                    });
-                }
-            })
-            .then(data => {
-                // Mostrar mensaje de éxito
-                this.successMessage = data;
-                // Limpiar el mensaje de error
-                this.errorMessage = '';
-                // Limpiar los campos del formulario
-                this.username = '';
-                this.email = '';
-                this.password = '';
-            })
-            .catch(error => {
-                // Mostrar mensaje de error
-                this.errorMessage = error.message;
-                // Limpiar el mensaje de éxito
-                this.successMessage = '';
-            });
+export default {
+  data() {
+    return {
+      username: '',
+      email: '',
+      password: '',
+      successMessage: '',
+      errorMessage: ''
+    };
+  },
+  methods: {
+    registerUser() {
+      const userData = {
+        username: this.username,
+        email: this.email,
+        password: this.password
+      };
+
+      fetch('/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response.json().then(errorData => {
+            throw new Error(errorData.error);
+          });
         }
+      })
+      .then(data => {
+        this.successMessage = 'Registro exitoso. Redirigiendo...';
+        Swal.fire({
+          title: 'Éxito',
+          text: 'Registro exitoso',
+          icon: 'success',
+          confirmButtonText: 'Ir a la página principal'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/';  // Redirige a la página principal
+          }
+        });
+        this.username = '';
+        this.email = '';
+        this.password = '';
+      })
+      .catch(error => {
+        this.errorMessage = error.message;
+        Swal.fire({
+          title: 'Error',
+          text: this.errorMessage,
+          icon: 'error',
+          confirmButtonText: 'Intentar de nuevo'
+        });
+      });
     }
+  }
 }
 </script>
   
@@ -102,7 +109,7 @@ body {
 
 .background-container::after {
     content: "";
-    background-image: url('C:\Users\Andre\Downloads\Proyecto\Proyecto\image2.png'); /* Ruta de la imagen de fondo */
+    background-image: url('C:\Users\kevin\Videos\Proyecto\Proyecto\image2.png'); /* Ruta de la imagen de fondo */
     background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
     background-position: center; /* Centra la imagen */
     position: absolute;
@@ -146,7 +153,7 @@ body {
 }
 
 .card input[type="submit"] {
-    background-color: #007bff;
+    background-color: #59499b;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -156,7 +163,7 @@ body {
 }
 
 .card input[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color: #7f6fc0;
 }
 
 /* Estilos para los mensajes de éxito y error */

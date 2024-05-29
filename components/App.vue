@@ -1,34 +1,49 @@
 <template>
   <div id="app">
-    <header>
-      <!-- Aquí puedes agregar un encabezado común para todas las páginas -->
+    <header v-if="$route.path !== '/ar'">
       <router-link to="/" class="home-link">
-        <h1>FerroAR</h1>
+        <h1 class="title">FerroAR</h1>
       </router-link>
       <nav>
-        <!-- Aquí podrías agregar la navegación de la aplicación -->
         <div class="nav-buttons">
-          <router-link to="/login" class="btn">Iniciar Sesión</router-link>
-          <router-link to="/register" class="btn">Registrarse</router-link>
+          <router-link v-if="!isAuthenticated" to="/login" class="btn">Iniciar Sesión</router-link>
+          <router-link v-if="!isAuthenticated" to="/register" class="btn">Registrarse</router-link>
+          <div v-if="isAuthenticated" class="user-info">
+            <span>Bienvenido, {{ currentUser.username }}</span>
+            <button @click="logout" class="btn">Cerrar Sesión</button>
+            <router-link v-if="isAdmin" to="/manage-users" class="btn">Gestionar Usuarios</router-link>
+          </div>
+          <router-link to="/maps" class="btn">Mapas</router-link>
         </div>
       </nav>
     </header>
     
     <main>
-      <!-- El componente Index.vue se mostrará aquí cuando la ruta coincida con '/' -->
       <router-view></router-view>
     </main>
     
     <footer>
-      <!-- Aquí puedes agregar un pie de página común para todas las páginas -->
-      <p>&copy; 2024 FerroAR</p>
+      <p>© 2024 FerroAR</p>
     </footer>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions, mapGetters } from 'vuex';
+
 export default {
-  name: 'App'
+  name: 'App',
+  computed: {
+    ...mapState(['user']),
+    ...mapGetters(['isAuthenticated', 'currentUser', 'isAdmin'])
+  },
+  methods: {
+    ...mapActions(['logoutUser']),
+    logout() {
+      this.logoutUser();
+      this.$router.push('/');
+    }
+  }
 }
 </script>
 
@@ -78,21 +93,21 @@ nav {
 }
 
 .btn {
-  background-color: #0056b3;
+  background-color: #59499b;
   color: #fff;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   text-decoration: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: bold;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .btn:hover {
-  background-color: #002f61;
+  background-color: #7f6fc0;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -107,11 +122,16 @@ footer {
   background-color: #292929;
   color: #fff;
   text-align: center;
-  padding: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 5px;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 1000; /* Asegura que el pie de página esté por encima de otros elementos */
+}
+.title {
+  font-family: 'Courier New', Courier, monospace; /* Cambia 'Courier New' por la fuente que desees */
+  font-weight: lighter;
 }
 </style>

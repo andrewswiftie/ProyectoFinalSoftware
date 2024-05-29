@@ -1,78 +1,96 @@
 <template>
-    <div class="background-container">
-        <div class="card">
-            <h1>Iniciar sesión</h1>
-            <form @submit.prevent="loginUser">
-                <label for="username">Nombre de usuario:</label>
-                <input type="text" id="username" v-model="username" required><br><br>
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" v-model="password" required><br><br>
-                <input type="submit" value="Iniciar sesión">
-            </form>
-            <p>¿No tienes una cuenta? <router-link to="/register">Registrarse</router-link></p>
-            <p>¿Olvidaste tu contraseña? <router-link to="/reset-password">Recuperar contraseña</router-link></p>
-            
-            <!-- Mostrar mensaje de éxito -->
-            <div v-if="successMessage" class="result-message success-message">
-                {{ successMessage }}
-            </div>
+  <div class="background-container">
+    <div class="card">
+      <h1>Iniciar sesión</h1>
+      <form @submit.prevent="loginUser">
+        <label for="username">Nombre de usuario:</label>
+        <input type="text" id="username" v-model="username" required><br><br>
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" v-model="password" required><br><br>
+        <input type="submit" value="Iniciar sesión">
+      </form>
+      <p>¿No tienes una cuenta? <router-link to="/register">Registrarse</router-link></p>
+      <p>¿Olvidaste tu contraseña? <router-link to="/reset-password">Recuperar contraseña</router-link></p>
 
-            <!-- Mostrar mensaje de error -->
-            <div v-if="errorMessage" class="result-message error-message">
-                {{ errorMessage }}
-            </div>
-        </div>
+      <div v-if="successMessage" class="result-message success-message">
+        {{ successMessage }}
+      </div>
+
+      <div v-if="errorMessage" class="result-message error-message">
+        {{ errorMessage }}
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-export default {
-    data() {
-        return {
-            username: '',
-            password: '',
-            errorMessage: '',
-            successMessage: ''
-        };
-    },
-    methods: {
-        loginUser() {
-            const userData = {
-                username: this.username,
-                password: this.password
-            };
+import Swal from 'sweetalert2';
+import { mapActions } from 'vuex';
 
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userData)
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.text();  // Cambia esto
-                } else {
-                    return response.text().then(text => {
-                        throw new Error(text);
-                    });
-                }
-            })
-            .then(data => {
-                this.successMessage = data;
-                this.errorMessage = '';
-                this.username = '';
-                this.password = '';
-            })
-            .catch(error => {
-                this.errorMessage = error.message;
-                this.successMessage = '';
-            });
+export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      successMessage: '',
+      errorMessage: ''
+    };
+  },
+  methods: {
+    ...mapActions(['loginUser']),
+    loginUser() {
+      const userData = {
+        username: this.username,
+        password: this.password
+      };
+
+      if (!userData.username || !userData.password) {
+        this.errorMessage = 'Por favor, complete todos los campos.';
+        return;
+      }
+
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => { throw new Error(err.error); });
         }
+        return response.json();
+      })
+      .then(data => {
+        this.$store.dispatch('loginUser', data.user);
+        Swal.fire({
+          title: 'Éxito',
+          text: 'Inicio de sesión exitoso',
+          icon: 'success',
+          confirmButtonText: 'Ir a la página principal'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.$router.push('/');
+          }
+        });
+        this.username = '';
+        this.password = '';
+      })
+      .catch(error => {
+        Swal.fire({
+          title: 'Error',
+          text: error.message,
+          icon: 'error',
+          confirmButtonText: 'Intentar de nuevo'
+        });
+        this.errorMessage = error.message;
+      });
     }
+  }
 }
 </script>
-  
+
 <style scoped>
 /* Estilos CSS para la página de inicio */
 body {
@@ -89,7 +107,7 @@ body {
 
 .background-container::after {
     content: "";
-    background-image: url('C:\Users\Andre\Downloads\Proyecto\Proyecto\image2.png'); /* Ruta de la imagen de fondo */
+    background-image: url('C:\Users\kevin\Videos\Proyecto\Proyecto\image2.png'); /* Ruta de la imagen de fondo */
     background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
     background-position: center; /* Centra la imagen */
     position: absolute;
@@ -133,7 +151,7 @@ body {
 }
 
 .card input[type="submit"] {
-    background-color: #007bff;
+    background-color: #59499b;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -143,7 +161,7 @@ body {
 }
 
 .card input[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color: #7f6fc0;
 }
 
 /* Estilos para los mensajes de éxito y error */
