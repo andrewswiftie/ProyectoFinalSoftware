@@ -123,7 +123,7 @@ footer {
   color: #fff;
   text-align: center;
   font-family: 'Courier New', Courier, monospace;
-  padding: 5px;
+  padding: 6px;
   position: fixed;
   bottom: 0;
   left: 0;
