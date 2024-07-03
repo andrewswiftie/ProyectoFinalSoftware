@@ -1,5 +1,5 @@
 window.initMap = function(){
-    const coordsCompu = {lat: 32.63171422343683, lng: -115.44472587855753};
+    const coordsCompu = {lat: 32.631722343683, lng: -115.44472587855753};
     const coordsElectrica = {lat: 32.63125408519523, lng: -115.4441452584255};
     const map = new google.maps.Map(document.getElementById("map"),{
         zoom: 20,
