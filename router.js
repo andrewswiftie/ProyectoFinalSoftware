@@ -17,6 +17,7 @@ const routes = [
   { path: '/manage-users', name: 'ManageUsers', component: ManageUsers }
 ];
 
+//esto es un comentario
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
