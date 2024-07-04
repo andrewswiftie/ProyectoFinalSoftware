@@ -3,7 +3,7 @@
         <div class="card">
             <h1>Registro</h1>
             <form @submit.prevent="registerUser">
-                <label for="username">Nombre de usuario:</label>
+                <label for="username">Nombreeee de usuario:</label>
                 <input type="text" id="username" v-model="username" required><br><br>
                 <label for="email">Correo electrónico:</label>
                 <input type="email" id="email" v-model="email" required><br><br>
