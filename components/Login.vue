@@ -66,7 +66,7 @@ export default {
         this.$store.dispatch('loginUser', data.user);
         Swal.fire({
           title: 'Éxito',
-          text: 'Inicio de sesión exitoso',
+          text: 'Inicio de sesión exitoso!!',
           icon: 'success',
           confirmButtonText: 'Ir a la página principal'
         }).then((result) => {

@@ -75,7 +75,7 @@ header h1 {
 
 nav {
   display: flex;
-  gap: 10px; /* Espaciado entre los botones de navegación */
+  gap: 11px; /* Espaciado entre los botones de navegación */
 }
 
 .home-link {
