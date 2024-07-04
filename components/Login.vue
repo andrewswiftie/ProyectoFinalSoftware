@@ -4,7 +4,7 @@
       <h1>Iniciar sesión</h1>
       <form @submit.prevent="loginUser">
         <label for="username">Nombre de usuario:</label>
-        <input type="text" id="username" v-model="username" required><br><br>
+        <input type="texti" id="username" v-model="username" required><br><br>
         <label for="password">Contraseña:</label>
         <input type="password" id="password" v-model="password" required><br><br>
         <input type="submit" value="Iniciar sesión">
