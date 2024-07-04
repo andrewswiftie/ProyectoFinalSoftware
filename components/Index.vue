@@ -103,7 +103,7 @@ body {
 ul {
   list-style-type: disc;
   text-align: left;
-  padding-left: 20px;
+  padding-left: 23px;
 }
 
 /* Estilos para el botón */
